@@ -2,8 +2,8 @@
   "users": [
     {
       "username": "admin",
-      "password_hash": "$2b$12$yyHb5Pn329oRpoeEmLt3H.kZtjs8U5qehNQ3I9lnf/DVyzyuxQTzG",
-      "totp_secret": "S3UFJI5B366IPFC4N77PAJSKNYOF6Q7A",
+      "password_hash": "$2b$12$U.NfCCNSxaJKpviAvrx1d.XEy7G7l9v.aEs8F3RnJv0sBd61XGL/i",
+      "totp_secret": "2ILCCD64YGJOYFF47K5DYYS3OOLKMLAC",
       "role": "admin"
     }
   ]

@@ -17,12 +17,9 @@ COPY ../templates ./templates
 COPY ../static ./static
 COPY ../main.py ./main.py
 COPY ../start.py ./start.py
-
-# Create directories for mounting
-RUN mkdir -p /data /app/config
+COPY ../.env ./.env
 
 # Set environment variables
-ENV DATA_DIR=/data
 ENV FLASK_APP=main.py
 ENV FLASK_ENV=production
 ENV PYTHONPATH=/app
@@ -32,8 +29,7 @@ EXPOSE 8000
 
 # Create non-root user
 RUN useradd --create-home --shell /bin/bash app \
-    && chown -R app:app /app \
-    && chown -R app:app /data
+    && chown -R app:app /app
 
 USER app
 
