@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  p_web_notebook:
+    build: 
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: p_web_notebook
+    ports:
+      - "8080:8000"
+    volumes:
+      - ../data:/data
+      - ../config:/app/config
+    environment:
+      - DATA_DIR=/data
+      - FLASK_ENV=production
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

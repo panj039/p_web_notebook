@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}{% if filepath %}Edit {{ filename }}{% else %}New File{% endif %} - {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="editor-container">
+    <div class="editor-header">
+        <h1>{% if filepath %}✏️ Edit {{ filename }}{% else %}📝 New File{% endif %}</h1>
+        <div class="editor-actions">
+            {% if filepath %}
+                <a href="{{ url_for('view_file', filepath=filepath) }}" class="btn btn-secondary">👁️ View</a>
+            {% endif %}
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">🏠 Home</a>
+        </div>
+    </div>
+
+    <div class="editor-content">
+        {% if filepath %}
+            <form action="{{ url_for('save_file', filepath=filepath) }}" method="POST">
+        {% else %}
+            <form action="{{ url_for('create_file') }}" method="POST">
+                <div class="form-group">
+                    <label for="filename">Filename:</label>
+                    <input type="text" id="filename" name="filename" value="{{ filename }}" 
+                           placeholder="example.md" required>
+                </div>
+                <div class="form-group">
+                    <label for="directory">Directory (optional):</label>
+                    <input type="text" id="directory" name="directory" 
+                           placeholder="e.g., notes/projects">
+                </div>
+        {% endif %}
+            
+            <div class="form-group">
+                <label for="content">Content:</label>
+                <textarea id="content" name="content" rows="20" placeholder="Start writing...">{{ content }}</textarea>
+            </div>
+            
+            <div class="editor-buttons">
+                <button type="submit" class="btn btn-primary">💾 Save</button>
+                <button type="button" id="preview-btn" class="btn btn-secondary">👁️ Preview</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Preview modal -->
+<div id="preview-modal" class="modal" style="display: none;">
+    <div class="modal-content modal-large">
+        <span class="close">&times;</span>
+        <h3>📋 Preview</h3>
+        <div id="preview-content"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const previewBtn = document.getElementById('preview-btn');
+    const modal = document.getElementById('preview-modal');
+    const closeBtn = modal.querySelector('.close');
+    const previewContent = document.getElementById('preview-content');
+    const contentTextarea = document.getElementById('content');
+
+    previewBtn.addEventListener('click', function() {
+        const content = contentTextarea.value;
+        
+        // Simple markdown-like preview (basic implementation)
+        let html = content
+            .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+            .replace(/`(.*?)`/g, '<code>$1</code>')
+            .replace(/\n/g, '<br>');
+        
+        previewContent.innerHTML = html;
+        modal.style.display = 'block';
+    });
+
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ filename }} - {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="viewer-container">
+    <div class="viewer-header">
+        <h1>📄 {{ filename }}</h1>
+        <div class="viewer-actions">
+            <a href="{{ url_for('edit_file', filepath=filepath) }}" class="btn btn-primary">✏️ Edit</a>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">🏠 Home</a>
+        </div>
+    </div>
+
+    <div class="viewer-content">
+        {% if is_markdown %}
+            <div class="markdown-content">
+                {{ content | safe }}
+            </div>
+        {% else %}
+            <div class="text-content">
+                <pre><code>{{ content }}</code></pre>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
